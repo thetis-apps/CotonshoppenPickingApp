@@ -1,88 +1,143 @@
 <!DOCTYPE HTML>
 <html lang="da">
     <head>
-        <title>Plukning</title>
+        <title>Cotonshoppen</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans"/>
         <link rel="stylesheet" type="text/css" href="style.css"/>
     	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>    
     	<script src="https://hammerjs.github.io/dist/hammer.js"></script>
-        <script src="script.js?version=09"></script>
+        <script src="script.js?version=71"></script>
     </head>
     <body>
         
-        <div id="pickingListsView" class="view"> 
-            <div>
+        <div id="blocker" class="blocker"></div>
+        
+        <!-- View for choosing work flow -->
+        
+        <div id="startView" class="view">
+            <div class="center">
                 <img src="logo.png" />
             </div>
-            <h1>Plukkelister</h1>
-            <div class="table" data-table-name="pickingListTable"></div>
-            <div class="template row" data-table-name="pickingListTable">
-                <div class="cell" data-field-name="localizedDocumentType"></div>
-                <div class="cell" data-field-name="documentNumber"></div>
-                <div class="cell" data-field-name="localizedTimeCreated"></div>
+            <div class="line center medium">Vælg arbejdsgang</div>
+            <div class="line center">
+                <button class="big" data-action="picking">Plukning</button>
             </div>
-            <button data-action="refresh">Opfrisk</button>
-        </div>
-        
-        <div id="lineToPickView" class="view">
-            <h1>Vare at plukke</h1>
-            <div data-field-name="locationNumber"></div>
-            <div data-field-name="productName"></div>
-            <div data-field-name="productVariantKey.color"></div>
-            <div data-field-name="productVariantKey.size"></div>
-            <div data-field-name="productVariantKey.material"></div>
-            <div data-field-name="productVariantKey.packagingType"></div>
-            <div data-field-name="productVariantKey.description"></div>
-            <div data-field-name="numItemsOrdered"></div>
-            <div data-field-name="pickToBoxNumber"></div>
-            <div data-field-name="globalTradeItemNumber"></div>
-            <button data-action="confirm">Pluk</button>
-            <button data-action="options">...</button>
-            <div id="optionsPanel">
-	            <button data-action="previous">Forrige</button>
-	            <button data-action="next">Næste</button>
+            <div class="line center">
+                &copy; 2022 Thetis Apps ApS
             </div>
         </div>
         
-        <div id="linePickedView" class="view">
-            <h1>Plukket vare</h1>
-            <div data-field-name="locationNumber"></div>
-            <div data-field-name="productName"></div>
-            <div data-field-name="productVariantKey.color"></div>
-            <div data-field-name="productVariantKey.size"></div>
-            <div data-field-name="productVariantKey.material"></div>
-            <div data-field-name="productVariantKey.packagingType"></div>
-            <div data-field-name="productVariantKey.description"></div>
-            <div data-field-name="numItemsOrdered"></div>
-            <div data-field-name="pickToBoxNumber"></div>
-            <div data-field-name="globalTradeItemNumber"></div>
-            <button data-action="previous">Forrige</button>
-            <button data-action="next">Næste</button>
-            <button data-action="options">...</button>
-            <div id="optionsPanel">
-	            <button data-action="undo">Fortryd</button>
-	        </div>
+        <!-- View for choosing a picking list -->
+        
+        <div id="pickingListsView" class="view"> 
+            <div class="line center big">Plukkelister</div>
+            <div class="table center" data-table-name="pickingListTable"></div>
+            <div class="template table-row" data-table-name="pickingListTable">
+                <div class="table-cell" data-field-name="localizedDocumentType"></div>
+                <div class="table-cell" data-field-name="documentNumber"></div>
+                <div class="table-cell" data-field-name="localizedTimeCreated"></div>
+            </div>
+            <div class="line center">
+                <button class="big" data-action="refresh">Opfrisk</button>
+                <button class="big" data-action="resume">Genoptag</button>
+                <button class="big" data-action="menu">Menu</button>
+            </div>
         </div>
 
-        <div id="errorView" class="view">
-            <h1>Læs besked</h1>
-            <div data-error="noLinesToPick" class="error">Der er ingen linjer til plukning.</div>
-            <div data-error="pickingListLocked" class="error">Plukkelisten er låst af en anden bruger.</div>
-            <button data-action="acknowledge">OK</button>
+        <!-- View for picking or postponing a line -->
+        
+        <div id="lineToPickView" class="view">
+            <div class="large center location" data-field-name="locationNumber"></div>
+            <div class="big center" data-field-name="productName"></div>
+            <div class="line medium center">
+                <div data-field-name="productVariantKey.color"></div>
+                <div data-field-name="productVariantKey.size"></div>
+                <div data-field-name="productVariantKey.material"></div>
+                <div data-field-name="productVariantKey.packagingType"></div>
+                <div data-field-name="productVariantKey.description"></div>
+            </div>
+            <div class="line large center">
+                <label for="numItemsOrderedField">Antal</label>
+                <div id="numItemsOrderedField" class="quantity" data-field-name="numItemsOrdered"></div>
+            </div>
+            <div class="line large center">
+                <label for="pickToBoxNumberField">Boks</label>
+                <div id="pickToBoxNumberField" class="box" data-field-name="pickToBoxNumber"></div>
+            </div>
+            <div class="line medium center">
+                <label for="stockKeepingUnitField">SKU:</label>
+                <div id="stockKeepingUnitField" data-field-name="stockKeepingUnit"></div>
+            </div>
+            <div class="line center small">
+                <label for="globalTradeItemNumberField">EAN:</label>
+                <div id="globalTradeItemNumberField" data-field-name="globalTradeItemNumber"></div>
+            </div>
+            <div class="line center">    
+                <button class="big" data-action="confirm">Pluk</button>
+                <button class="big" data-action="options">...</button>
+            </div>
+            <div id="optionsPanel" class="line center">
+	            <button class="big" data-action="previous">Forrige</button>
+	            <button class="big" data-action="next">Næste</button>
+	            <button class="big" data-action="pause">Pause</button>
+                <button class="big" data-action="postpone">Udsæt</button>
+            </div>
+            <div class="line small center">
+                <label for="lineIndexField">Antal linjer</label>
+                <div id="lineIndexField"></div>/<div id="lineCountField"></div>
+            </div>
+            <div class="small" data-field-name="notesOnPicking"></div>
         </div>
         
+        <!-- View for browsing through picked lines -->
+        
+        <div id="linePickedView" class="view">
+            <div class="medium center">Plukket vare</div>
+            <div class="large center location" data-field-name="locationNumber"></div>
+            <div class="big center" data-field-name="productName"></div>
+            <div class="line medium center">
+                <div data-field-name="productVariantKey.color"></div>
+                <div data-field-name="productVariantKey.size"></div>
+                <div data-field-name="productVariantKey.material"></div>
+                <div data-field-name="productVariantKey.packagingType"></div>
+                <div data-field-name="productVariantKey.description"></div>
+            </div>
+            <div class="line medium center">
+                <label for="numItemsOrderedField">Antal</label>
+                <div id="numItemsOrderedField" class="quantity" data-field-name="numItemsOrdered"></div>
+            </div>
+            <div class="line medium center">
+                <label for="pickToBoxNumberField">Boks</label>
+                <div id="pickToBoxNumberField" class="box" data-field-name="pickToBoxNumber"></div>
+            </div>
+            <div class="line center">
+                <button class="big" data-action="previous">Forrige</button>
+                <button class="big" data-action="next">Næste</button>
+                <button class="big" data-action="options">...</button>
+            </div>
+            <div id="optionsPanel" class="line center">
+	            <button class="big" data-action="undo">Fortryd</button>
+	            <button class="big" data-action="pause">Pause</button>
+	        </div>
+            <div class="line small center">
+                <label for="lineIndexField">Antal linjer</label>
+                <div id="lineIndexField"></div>/<div id="lineCountField"></div>
+            </div>
+        </div>
+
     </body>
     <script>
     
-        App.init([ document.getElementById('pickingListsView'),
+        App.init([
+                document.getElementById('startView'),
+                document.getElementById('pickingListsView'),
                 document.getElementById('lineToPickView'),
-                document.getElementById('linePickedView'),
-                document.getElementById('errorView') ]);
+                document.getElementById('linePickedView')]);
         
- 		document.addEventListener("DOMContentLoaded", function(event) {
-            App.start();		    
+ 		document.addEventListener("DOMContentLoaded", async function(event) {
+            await App.start();		    
 		});
 		
     </script>

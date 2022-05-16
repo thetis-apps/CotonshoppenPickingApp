@@ -1,15 +1,20 @@
 body {
 	font-family: 'Open Sans', sans-serif;
-	text-align: center;
 	overflow: hidden;
+}
+
+label {
+    padding-right: 1em;    
 }
 
 .view {
     display: none;
     height: 100%;
+    margin: 1em;
+    transition: visibility 10s;
 }
 
-.row {
+.table-row {
     border: 1px solid black;
     margin: 2px;
     background: lightgray;
@@ -17,42 +22,105 @@ body {
     display: flex;
 }
 
-.cell {
+.line {
+    display: flex;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.table-cell {
 	padding: 10px;
 }
 
 .error {
     display: none;
     color: red;
-    font-size: 1.4em;
+    font-size: 2em;
 }
 
-div[data-field-name='locationNumber'] {
-    font-size: 4em;
-    color: green;
+.large {
+    font-size: 5em;
 }
 
-div[data-field-name='productName'] {
-    font-size: 1.2em;
-}
-
-div[data-field-name='numItemsOrdered'] {
-    font-size: 1.2em;
-    color: red;
-}
-
-div[data-field-name='pickToBoxNumber'] {
+.big {
     font-size: 3em;
-    color: blue;
+}
+
+.medium {
+    font-size: 2em;
+}
+
+.small {
+    font-size: 1em;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.indent {
+    padding-left: 2em;
 }
 
 button {
-    margin-top: 1em;
-    min-width: 4em;
-    font-size: 2em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-right: 1em;
+    padding-left: 1em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
 }
 
 .template {
     display: none;
 }
+
+.location {
+    color: green;
+}
+
+.quantity {
+    color: #EF53A9;
+}
+
+.box {
+    color: #58B1B7;
+}
+
+div[data-field-name='notesOnPicking'] {
+    font-size: 1.5em;
+    border: 1px solid black;
+    padding: 0.5em;
+    margin: 0.5em;
+    text-align: left;
+    min-height: 4em;
+}
+
+button[data-action="confirm"] {
+    min-width: 12em;
+}
+
+button[data-action="options"] {
+    max-width: 3em;
+}
+
+.blocker {
+	display: none;
+	z-index: 999;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: auto;
+	bottom: auto;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	opacity: .90;
+}
+
+
 
